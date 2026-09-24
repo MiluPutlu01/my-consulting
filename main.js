@@ -61,33 +61,39 @@
     const dots = [...film.querySelectorAll('.film-dot')];
     const caption = document.getElementById('film-caption');
     const bar = document.getElementById('film-bar');
+    const sweep = film.querySelector('.film-sweep');
+    const appName = document.getElementById('film-app');
 
-    const CAPTIONS = [
-      'The spreadsheet you already have',
-      'A live view of the business',
-      'Where it is heading',
-      'Open any number to the lines behind it',
-      'And what to do about it',
+    // Per scene: caption, how long it holds, and what the window is called.
+    const BEATS = [
+      { cap: 'The problem', hold: 2600, app: 'Ledger.xlsx' },
+      { cap: 'Questions a spreadsheet cannot answer', hold: 4200, app: 'Ledger.xlsx' },
+      { cap: 'Clarity', hold: 2600, app: 'Prism' },
+      { cap: 'The same file, made legible', hold: 4200, app: 'Prism' },
+      { cap: 'Open any figure to the lines behind it', hold: 4200, app: 'Prism' },
+      { cap: 'Reach', hold: 2600, app: 'Campaigns' },
+      { cap: 'Marketing with something true to say', hold: 4200, app: 'Campaigns' },
+      { cap: 'Proof', hold: 2600, app: 'Results' },
+      { cap: 'What came back, measured', hold: 4600, app: 'Results' },
     ];
-    const HOLD = [3600, 4200, 4200, 4200, 4600];
 
     let current = 0;
     let timer = null;
-    let started = null;
+    let startedAt = null;
     let raf = null;
+    let playing = false;
 
     const countUp = (scene) => {
       scene.querySelectorAll('[data-count]').forEach((el) => {
         const target = Number(el.dataset.count);
         const prefix = el.dataset.prefix || '';
         const suffix = el.dataset.suffix || '';
-        const started = performance.now();
+        const from = performance.now();
         const DURATION = 1100;
 
         const tick = (now) => {
-          const t = Math.min((now - started) / DURATION, 1);
-          const eased = 1 - Math.pow(1 - t, 3);
-          const value = Math.round(target * eased);
+          const t = Math.min((now - from) / DURATION, 1);
+          const value = Math.round(target * (1 - Math.pow(1 - t, 3)));
           el.textContent =
             prefix + (target >= 1000 ? value.toLocaleString() : String(value)) + suffix;
           if (t < 1) requestAnimationFrame(tick);
@@ -99,58 +105,67 @@
     const trackProgress = () => {
       cancelAnimationFrame(raf);
       const step = (now) => {
-        const t = Math.min((now - started) / HOLD[current], 1);
+        const t = Math.min((now - startedAt) / BEATS[current].hold, 1);
         bar.style.width = `${t * 100}%`;
-        if (t < 1) raf = requestAnimationFrame(step);
+        if (t < 1 && playing) raf = requestAnimationFrame(step);
       };
       raf = requestAnimationFrame(step);
     };
 
-    const show = (next, auto = false) => {
+    const markAct = () => {
+      const act = Number(scenes[current].dataset.act);
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === act));
+    };
+
+    const show = (next) => {
       scenes[current]?.classList.remove('is-active');
-      dots[current]?.classList.remove('is-active');
-
       current = next;
-
       scenes[current].classList.add('is-active');
-      dots[current].classList.add('is-active');
+      markAct();
+
+      // Restart the sweep by taking the class off and forcing a reflow.
+      sweep.classList.remove('run');
+      void sweep.offsetWidth;
+      sweep.classList.add('run');
+
+      appName.textContent = BEATS[current].app;
 
       caption.classList.add('swap');
       setTimeout(() => {
-        caption.textContent = CAPTIONS[current];
+        caption.textContent = BEATS[current].cap;
         caption.classList.remove('swap');
       }, 260);
 
-      if (current === 1) countUp(scenes[1]);
+      if (scenes[current].querySelector('[data-count]')) countUp(scenes[current]);
 
-      started = performance.now();
+      startedAt = performance.now();
       trackProgress();
 
       clearTimeout(timer);
-      if (auto || timer !== null) {
-        timer = setTimeout(() => show((current + 1) % scenes.length, true), HOLD[current]);
+      if (playing) {
+        timer = setTimeout(() => show((current + 1) % scenes.length), BEATS[current].hold);
       }
     };
 
     dots.forEach((dot) =>
       dot.addEventListener('click', () => {
+        playing = false; // a deliberate click stops the reel; the visitor is steering
         clearTimeout(timer);
-        timer = null; // a deliberate click stops the reel; the visitor is steering now
+        cancelAnimationFrame(raf);
         show(Number(dot.dataset.go));
         bar.style.width = '100%';
-        cancelAnimationFrame(raf);
       }),
     );
 
-    // Only run once the film is actually on screen, and only if motion is welcome.
     if (motionOk && 'IntersectionObserver' in window) {
       const filmIO = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (!entry.isIntersecting) return;
-            timer = setTimeout(() => show(1, true), HOLD[0]);
-            started = performance.now();
+            playing = true;
+            startedAt = performance.now();
             trackProgress();
+            timer = setTimeout(() => show(1), BEATS[0].hold);
             filmIO.disconnect();
           });
         },
@@ -158,13 +173,14 @@
       );
       filmIO.observe(film);
     } else {
-      // No motion: show the dashboard frame, which says the most on its own.
+      // No motion: hold the frame that says the most on its own.
       scenes[0].classList.remove('is-active');
-      scenes[1].classList.add('is-active');
-      dots[0].classList.remove('is-active');
-      dots[1].classList.add('is-active');
-      caption.textContent = CAPTIONS[1];
-      scenes[1].querySelectorAll('[data-count]').forEach((el) => {
+      scenes[3].classList.add('is-active');
+      current = 3;
+      markAct();
+      appName.textContent = BEATS[3].app;
+      caption.textContent = BEATS[3].cap;
+      scenes[3].querySelectorAll('[data-count]').forEach((el) => {
         const n = Number(el.dataset.count);
         el.textContent = (el.dataset.prefix || '') + n.toLocaleString() + (el.dataset.suffix || '');
       });

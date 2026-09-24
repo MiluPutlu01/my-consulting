@@ -101,54 +101,69 @@
           </div>
         </div>
 
-        <!-- Scripted demo of Prism, built in the page rather than shipped as video:
-             it stays sharp at any size and is never blocked by autoplay rules. -->
+        <!-- A four-act film of the work, built in the page rather than shipped as
+             video: it stays sharp at any size and is never blocked by autoplay. -->
         <div class="shell">
           <figure class="film reveal" id="film">
             <div class="film-frame">
               <div class="film-chrome" aria-hidden="true">
                 <i></i><i></i><i></i>
-                <span class="film-title">Prism</span>
+                <span class="film-title" id="film-app">Ledger.xlsx</span>
               </div>
 
               <div class="film-stage">
-                <div class="scene is-active" data-scene="0">
-                  <div class="sheet">
-                    <div class="sheet-row sheet-head">
-                      <span>Date</span><span>Client</span><span>Category</span><span>Amount</span>
-                    </div>
-                    <div class="sheet-row"><span>2026-08-01</span><span>Rox Atlanta</span><span>Revenue</span><span>1,591</span></div>
-                    <div class="sheet-row"><span>2026-08-01</span><span>Equipment</span><span>Tools</span><span>-2,397</span></div>
-                    <div class="sheet-row"><span>2026-07-01</span><span>Flight Att.</span><span>Revenue</span><span>1,440</span></div>
-                    <div class="sheet-row"><span>2026-07-01</span><span>Outsourcing</span><span>Tools</span><span>-170</span></div>
-                    <div class="sheet-row"><span>2026-06-01</span><span>No Shade Tan</span><span>Revenue</span><span>250</span></div>
-                    <div class="sheet-row"><span>2026-06-01</span><span>Storage</span><span>Tools</span><span>-12.98</span></div>
-                    <div class="sheet-row"><span>2026-05-01</span><span>Agency</span><span>Revenue</span><span>2,000</span></div>
-                    <div class="sheet-row"><span>2026-05-01</span><span>Website</span><span>Tools</span><span>-200</span></div>
+                <div class="film-sweep" aria-hidden="true"></div>
+
+                <!-- ACT I — the problem -->
+                <div class="scene scene--title is-active" data-scene="0" data-act="0">
+                  <div class="card-act">
+                    <span class="act-num">01</span>
+                    <b class="act-name">The problem</b>
+                    <em class="act-sub">Everything is in the spreadsheet. None of it is an answer.</em>
                   </div>
                 </div>
 
-                <div class="scene" data-scene="1">
+                <div class="scene" data-scene="1" data-act="0">
+                  <div class="mess">
+                    <div class="sheet">
+                      <div class="sheet-row sheet-head"><span>Date</span><span>Client</span><span>Category</span><span>Amount</span></div>
+                      <div class="sheet-row"><span>2026-08-01</span><span>Rox Atlanta</span><span>Revenue</span><span>1,591</span></div>
+                      <div class="sheet-row"><span>2026-08-01</span><span>Equipment</span><span>Tools</span><span>-2,397</span></div>
+                      <div class="sheet-row"><span>2026-07-01</span><span>Flight Att.</span><span>Revenue</span><span>1,440</span></div>
+                      <div class="sheet-row"><span>2026-07-01</span><span>Outsourcing</span><span>Tools</span><span>-170</span></div>
+                      <div class="sheet-row"><span>2026-06-01</span><span>No Shade Tan</span><span>Revenue</span><span>250</span></div>
+                      <div class="sheet-row"><span>2026-05-01</span><span>Agency</span><span>Revenue</span><span>2,000</span></div>
+                    </div>
+                    <div class="asks">
+                      <span class="ask">Which clients actually pay?</span>
+                      <span class="ask">What's renewing without us noticing?</span>
+                      <span class="ask">Can we afford to hire?</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ACT II — clarity -->
+                <div class="scene scene--title" data-scene="2" data-act="1">
+                  <div class="card-act">
+                    <span class="act-num">02</span>
+                    <b class="act-name">Clarity</b>
+                    <em class="act-sub">The same file, turned into something you can act on.</em>
+                  </div>
+                </div>
+
+                <div class="scene" data-scene="3" data-act="1">
                   <div class="kpis">
                     <div class="kpi">
-                      <span>Revenue</span>
-                      <strong data-count="37900" data-prefix="$">$0</strong>
-                      <em class="up">▲ 38.7%</em>
+                      <span>Revenue</span><strong data-count="37900" data-prefix="$">$0</strong><em class="up">▲ 38.7%</em>
                     </div>
                     <div class="kpi">
-                      <span>Expenses</span>
-                      <strong data-count="16146" data-prefix="$">$0</strong>
-                      <em>▲ 36.0%</em>
+                      <span>Expenses</span><strong data-count="16146" data-prefix="$">$0</strong><em>▲ 36.0%</em>
                     </div>
                     <div class="kpi">
-                      <span>Net result</span>
-                      <strong data-count="21794" data-prefix="$">$0</strong>
-                      <em class="up">▲ 45.4%</em>
+                      <span>Net result</span><strong data-count="21794" data-prefix="$">$0</strong><em class="up">▲ 45.4%</em>
                     </div>
                     <div class="kpi">
-                      <span>Net margin</span>
-                      <strong data-count="57" data-suffix="%">0%</strong>
-                      <em class="up">▲ 4.8%</em>
+                      <span>Net margin</span><strong data-count="57" data-suffix="%">0%</strong><em class="up">▲ 4.8%</em>
                     </div>
                   </div>
                   <div class="film-bars">
@@ -158,28 +173,7 @@
                   </div>
                 </div>
 
-                <div class="scene" data-scene="2">
-                  <div class="chart-wrap">
-                    <svg viewBox="0 0 520 200" preserveAspectRatio="none" aria-hidden="true">
-                      <defs>
-                        <linearGradient id="fill" x1="0" x2="0" y1="0" y2="1">
-                          <stop offset="0%" stop-color="#7c8cff" stop-opacity=".45" />
-                          <stop offset="100%" stop-color="#7c8cff" stop-opacity="0" />
-                        </linearGradient>
-                      </defs>
-                      <g class="grid">
-                        <line x1="0" y1="50" x2="520" y2="50" />
-                        <line x1="0" y1="100" x2="520" y2="100" />
-                        <line x1="0" y1="150" x2="520" y2="150" />
-                      </g>
-                      <path class="area" d="M0 165 L74 148 L148 156 L222 112 L296 124 L370 78 L444 90 L520 48 L520 200 L0 200 Z" fill="url(#fill)" />
-                      <path class="line" d="M0 165 L74 148 L148 156 L222 112 L296 124 L370 78 L444 90 L520 48" fill="none" stroke="#9aa6ff" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
-                    </svg>
-                    <span class="chart-flag">Projected · next 12 months</span>
-                  </div>
-                </div>
-
-                <div class="scene" data-scene="3">
+                <div class="scene" data-scene="4" data-act="1">
                   <div class="kpis small">
                     <div class="kpi"><span>Revenue</span><strong>$37.9K</strong></div>
                     <div class="kpi is-open"><span>Expenses</span><strong>$16.1K</strong></div>
@@ -189,28 +183,53 @@
                   <div class="drill">
                     <div class="drill-head"><b>Expenses</b><span>88 lines · $16,146</span></div>
                     <div class="drill-row"><span>Equipment — August</span><b>−$2,397</b></div>
-                    <div class="drill-row"><span>Equipment — May</span><b>−$1,997</b></div>
                     <div class="drill-row"><span>Mad Marketing — July</span><b>−$1,333</b></div>
                     <div class="drill-row"><span>Social Pilot — February</span><b>−$1,006</b></div>
                   </div>
                 </div>
 
-                <div class="scene" data-scene="4">
-                  <div class="finds">
-                    <div class="find">
-                      <span class="find-sev">Watch</span>
-                      <b>One client is 35% of your revenue</b>
-                      <em>$13,394 a year concerned</em>
+                <!-- ACT III — reach -->
+                <div class="scene scene--title" data-scene="5" data-act="2">
+                  <div class="card-act">
+                    <span class="act-num">03</span>
+                    <b class="act-name">Reach</b>
+                    <em class="act-sub">Now the marketing has something true to say.</em>
+                  </div>
+                </div>
+
+                <div class="scene" data-scene="6" data-act="2">
+                  <div class="reach">
+                    <div class="posts">
+                      <span class="post"></span><span class="post p2"></span>
+                      <span class="post p3"></span><span class="post p4"></span>
                     </div>
-                    <div class="find">
-                      <span class="find-sev">Watch</span>
-                      <b>47% of spend renews automatically</b>
-                      <em>$4,532 a year committed</em>
+                    <div class="channels">
+                      <div class="channel"><span>Social</span><i style="--w: 78%"></i></div>
+                      <div class="channel"><span>Email</span><i style="--w: 54%"></i></div>
+                      <div class="channel"><span>Search</span><i style="--w: 41%"></i></div>
+                      <div class="channel"><span>Referral</span><i style="--w: 29%"></i></div>
                     </div>
-                    <div class="find">
-                      <span class="find-sev alt">Opportunity</span>
-                      <b>17 small subscriptions, none big alone</b>
-                      <em>Together, worth a review</em>
+                  </div>
+                </div>
+
+                <!-- ACT IV — proof -->
+                <div class="scene scene--title" data-scene="7" data-act="3">
+                  <div class="card-act">
+                    <span class="act-num">04</span>
+                    <b class="act-name">Proof</b>
+                    <em class="act-sub">What came back, measured against what went out.</em>
+                  </div>
+                </div>
+
+                <div class="scene" data-scene="8" data-act="3">
+                  <div class="proof">
+                    <div class="proof-rows">
+                      <div class="proof-row"><span>Enquiries</span><b>+64</b><i class="spark" style="--w: 82%"></i></div>
+                      <div class="proof-row"><span>Cost per enquiry</span><b>−31%</b><i class="spark" style="--w: 58%"></i></div>
+                      <div class="proof-row"><span>Revenue attributed</span><b>$18.4K</b><i class="spark" style="--w: 91%"></i></div>
+                    </div>
+                    <div class="loop">
+                      <span>Measured</span><em>→</em><span>Back into the model</span><em>→</em><span>Next quarter's plan</span>
                     </div>
                   </div>
                 </div>
@@ -220,22 +239,19 @@
             </div>
 
             <figcaption class="film-rail">
-              <p class="film-caption" id="film-caption">The spreadsheet you already have</p>
+              <p class="film-caption" id="film-caption">The problem</p>
               <div class="film-dots">
                 <button class="film-dot is-active" type="button" data-go="0">
-                  <span class="sr-only">The spreadsheet you already have</span><i></i>
-                </button>
-                <button class="film-dot" type="button" data-go="1">
-                  <span class="sr-only">A live view of the business</span><i></i>
+                  <span class="sr-only">Act one, the problem</span><i></i>
                 </button>
                 <button class="film-dot" type="button" data-go="2">
-                  <span class="sr-only">Where it is heading</span><i></i>
+                  <span class="sr-only">Act two, clarity</span><i></i>
                 </button>
-                <button class="film-dot" type="button" data-go="3">
-                  <span class="sr-only">Open any number</span><i></i>
+                <button class="film-dot" type="button" data-go="5">
+                  <span class="sr-only">Act three, reach</span><i></i>
                 </button>
-                <button class="film-dot" type="button" data-go="4">
-                  <span class="sr-only">What to do about it</span><i></i>
+                <button class="film-dot" type="button" data-go="7">
+                  <span class="sr-only">Act four, proof</span><i></i>
                 </button>
               </div>
             </figcaption>
