@@ -1615,6 +1615,22 @@ ol {
 .form-note.ok {
   color: var(--accent-2);
 }
+.form-note.bad {
+  color: #ff8f8f;
+}
+.form-note a {
+  color: inherit;
+  border-bottom: 1px solid currentColor;
+}
+
+/* Visible only to bots that fill every field they find. */
+.hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
 
 /* ── Footer ───────────────────────────────────────────────────────────────── */
 

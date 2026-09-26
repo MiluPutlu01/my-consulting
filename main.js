@@ -220,7 +220,7 @@
     return okName && okEmail && okMessage;
   };
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     if (!validate()) {
@@ -229,22 +229,56 @@
     }
 
     const f = form.elements;
-    const subject = `New enquiry — ${f.topic.value}`;
-    const body = [
-      `Name: ${f.name.value.trim()}`,
-      `Email: ${f.email.value.trim()}`,
-      f.company.value.trim() ? `Business: ${f.company.value.trim()}` : null,
-      `Topic: ${f.topic.value}`,
-      '',
-      f.message.value.trim(),
-    ]
-      .filter(Boolean)
-      .join('\n');
+    const payload = {
+      name: f.name.value.trim(),
+      email: f.email.value.trim(),
+      business: f.company.value.trim() || '—',
+      topic: f.topic.value,
+      message: f.message.value.trim(),
+      _subject: `New enquiry — ${f.topic.value}`,
+      _template: 'table',
+      _captcha: 'false',
+    };
 
-    location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    // A bot that fills every field it finds gives itself away here.
+    if (f.website && f.website.value) return;
 
-    note.textContent = 'Opening your email app — press send there and it’s on its way.';
-    note.classList.add('ok');
+    const button = form.querySelector('button[type="submit"]');
+    button.disabled = true;
+    button.textContent = 'Sending…';
+    note.classList.remove('ok', 'bad');
+    note.textContent = '';
+
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${EMAIL}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error(`Server replied ${res.status}`);
+
+      form.reset();
+      note.textContent = 'Thank you — your message is on its way. We usually reply within a day.';
+      note.classList.add('ok');
+      button.textContent = 'Message sent';
+    } catch (err) {
+      // Never swallow this: a silent failure loses an enquiry without anyone knowing.
+      const body = [
+        `Name: ${payload.name}`,
+        `Email: ${payload.email}`,
+        `Business: ${payload.business}`,
+        `Topic: ${payload.topic}`,
+        '',
+        payload.message,
+      ].join('\n');
+
+      note.innerHTML =
+        `That didn’t send. Please email <a href="mailto:${EMAIL}?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}">${EMAIL}</a> ` +
+        `or call <a href="tel:+16788158688">(678) 815-8688</a>.`;
+      note.classList.add('bad');
+      button.disabled = false;
+      button.textContent = 'Try again';
+    }
   });
 
   // Clear an error as soon as the visitor starts fixing it.
