@@ -50,6 +50,18 @@
       { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
     );
     items.forEach((el) => io.observe(el));
+
+    // Content hidden by a reveal that never fires is content nobody sees. Reveal
+    // anything still waiting that has reached the viewport.
+    addEventListener('load', () => {
+      setTimeout(() => {
+        items.forEach((el) => {
+          if (el.classList.contains('in')) return;
+          const r = el.getBoundingClientRect();
+          if (r.top < innerHeight && r.bottom > 0) el.classList.add('in');
+        });
+      }, 1200);
+    });
   }
 
   /* ── Prism demo film ────────────────────────────────────────────────────── */
@@ -157,21 +169,45 @@
       }),
     );
 
-    if (motionOk && 'IntersectionObserver' in window) {
-      const filmIO = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            playing = true;
-            startedAt = performance.now();
-            trackProgress();
-            timer = setTimeout(() => show(1), BEATS[0].hold);
-            filmIO.disconnect();
-          });
-        },
-        { threshold: 0.35 },
-      );
-      filmIO.observe(film);
+    const startFilm = () => {
+      if (playing) return;
+      playing = true;
+      startedAt = performance.now();
+      trackProgress();
+      timer = setTimeout(() => show(1), BEATS[0].hold);
+    };
+
+    // Roughly in view. A cheap second opinion so the reel is never left unstarted.
+    const filmInView = () => {
+      const r = film.getBoundingClientRect();
+      return r.top < innerHeight * 0.9 && r.bottom > innerHeight * 0.1;
+    };
+
+    if (motionOk) {
+      if ('IntersectionObserver' in window) {
+        const filmIO = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              startFilm();
+              filmIO.disconnect();
+            });
+          },
+          { threshold: 0.35 },
+        );
+        filmIO.observe(film);
+      }
+
+      if (filmInView()) {
+        startFilm();
+      } else {
+        const onScroll = () => {
+          if (!filmInView()) return;
+          startFilm();
+          removeEventListener('scroll', onScroll);
+        };
+        addEventListener('scroll', onScroll, { passive: true });
+      }
     } else {
       // No motion: hold the frame that says the most on its own.
       scenes[0].classList.remove('is-active');

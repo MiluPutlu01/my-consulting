@@ -650,28 +650,48 @@ ol {
   gap: 12px;
 }
 .post {
+  margin: 0;
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  gap: 6px;
+  padding: 10px;
   border-radius: var(--r-sm);
-  border: 1px solid var(--line-2);
-  background: linear-gradient(150deg, rgba(124, 140, 255, 0.3), rgba(74, 217, 196, 0.12));
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.022);
+}
+.post b {
+  font-size: 0.82rem;
+  font-weight: 580;
+  letter-spacing: -0.02em;
+}
+.post i {
+  font-style: normal;
+  font-size: 0.7rem;
+  color: var(--ink-3);
+}
+.post-art {
+  border-radius: 7px;
+  background: linear-gradient(150deg, rgba(124, 140, 255, 0.45), rgba(74, 217, 196, 0.16));
   position: relative;
   overflow: hidden;
+  min-height: 48px;
 }
-.post::after {
+.post-art::after {
   content: '';
   position: absolute;
-  inset: auto 10px 10px;
-  height: 5px;
+  inset: auto 9px 9px;
+  height: 4px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.4);
 }
-.post.p2 {
-  background: linear-gradient(150deg, rgba(74, 217, 196, 0.28), rgba(124, 140, 255, 0.12));
+.post.p2 .post-art {
+  background: linear-gradient(150deg, rgba(74, 217, 196, 0.42), rgba(124, 140, 255, 0.16));
 }
-.post.p3 {
-  background: linear-gradient(150deg, rgba(255, 196, 107, 0.24), rgba(124, 140, 255, 0.14));
+.post.p3 .post-art {
+  background: linear-gradient(150deg, rgba(255, 196, 107, 0.38), rgba(124, 140, 255, 0.18));
 }
-.post.p4 {
-  background: linear-gradient(150deg, rgba(124, 140, 255, 0.22), rgba(255, 255, 255, 0.06));
+.post.p4 .post-art {
+  background: linear-gradient(150deg, rgba(124, 140, 255, 0.34), rgba(255, 255, 255, 0.1));
 }
 
 .channels {
@@ -1746,6 +1766,25 @@ ol {
     grid-template-columns: 1.2fr 1fr 0.8fr;
   }
   .sheet-row span:first-child {
+    display: none;
+  }
+  .mess {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+  .asks .ask:nth-child(3) {
+    display: none;
+  }
+  .posts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .channel {
+    grid-template-columns: 56px 1fr;
+  }
+  .proof-row {
+    grid-template-columns: 1fr auto;
+  }
+  .proof-row .spark {
     display: none;
   }
   .film-stage {
